@@ -19,8 +19,59 @@
     </div>
     <h4>【使用例】</h4>
     <div class="detail">
-      RaspberryPiを用いたサービスを作成した。<br>
-      <br>
+      AWSで、LINEBotを用いたレシート管理サービスを作成した。<br>
+      書いたラムダ関数の一部が以下である。<br>
+      <pre>
+        <code>
+          import os
+          import boto3
+          import json
+          from linebot import LineBotApi
+          from linebot.models import TextSendMessage, ImageSendMessage, ImageMessage
+
+          def lambda_handler(event, context):
+              LINE_CHANNEL_ACCESS_TOKEN = os.environ['LINE_CHANNEL_ACCESS_TOKEN']
+              LINE_BOT_API = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
+              bucket_name = "for-line-b"
+              image_key = "Receipt.jpg" 
+              s3 = boto3.client('s3')
+              obj = s3.get_object(Bucket=bucket_name, Key=image_key)
+              image_data = obj['Body'].read()
+              try:
+                  if event['events'][0]['type'] == 'message':
+                      if event['events'][0]['message']['type'] == 'text':
+                          replyToken = event['events'][0]['replyToken']
+                          messageText = event['events'][0]['message']['text']
+                          if messageText == "レシート":
+                              image_url = f"https://{bucket_name}.s3.amazonaws.com/{image_key}"
+                              LINE_BOT_API.reply_message(replyToken, ImageSendMessage(original_content_url=image_url, preview_image_url=image_url))
+                          elif messageText == "食事":
+                              s3.put_object(Bucket=bucket_name, Key="ジャンル.txt", Body="food")
+                              text = "「食事」のレシートを登録しました。"
+
+                      ・・・
+
+                      elif event['events'][0]['message']['type'] == 'image':
+                          replyToken = event['events'][0]['replyToken']
+                          message_id = event['events'][0]['message']['id']
+                          message_content = LINE_BOT_API.get_message_content(message_id)
+                          image_data = message_content.content
+                          s3.put_object(Bucket=bucket_name, Key=image_key, Body=image_data)
+                          text = "画像を受け取りました。このレシートの種類を、次の中から選んで入力してください。"
+                          text2 = "・食事"
+                          text3 = "・日用品"
+                          text4 = "・旅行"
+                          text5 = "・その他"
+                          LINE_BOT_API.reply_message(replyToken, TextSendMessage(text+"\n"+" "+"\n"+text2+"\n"+text3+"\n"+text4+"\n"+text5))        
+              except Exception as e:
+                  print(e)
+                  return {'statusCode': 500, 'body': json.dumps('Exception occurred.')}
+                  
+              return {'statusCode': 200, 'body': json.dumps('Reply ended normally.')}
+        </code>
+      </pre>
+      下のように、対話形式で利用できることがこのサービスのポイントである。<br>
+      <img src="../image/receipt.png" class="receipt"><br>
     </div>
   </div>
   <button type="button" onclick="history.back()">戻る</button>

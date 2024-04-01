@@ -23,6 +23,10 @@ header h3{
   width: 300px;
   margin: 15px 80px;
 }
+.receipt{
+  width: 800px;
+  margin: 10px 80px;
+}
 button{
   margin-left: 120px;
 }
