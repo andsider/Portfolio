@@ -1,0 +1,21 @@
+header{
+  background-color: #333333;
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 20px;
+}
+header h3{
+  color: #FFFFFF;
+}
+.contents{
+  margin: 0px 50px;
+}
+.contents h4{
+  margin-bottom: 0px;
+}
+.detail{
+  margin-left: 30px;
+}
+button{
+  margin-left: 100px;
+}

@@ -26,6 +26,10 @@ header ul li a{
   text-decoration: none;
 }
 
+header ul li a:hover{
+  color: #00FFFF;
+}
+
 header img{
   height: 60px;
 }
@@ -46,6 +50,10 @@ header img{
 .about{
   background-color: #F6F6F6;
   padding: 100px;
+}
+
+.about img{
+  border-radius: 25px;
 }
 
 h2{
