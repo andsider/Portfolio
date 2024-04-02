@@ -27,6 +27,22 @@ header h3{
   width: 800px;
   margin: 10px 80px;
 }
+.u0{
+  width: 450px;
+  margin: 10px 80px;
+}
+.u1{
+  width: 600px;
+  margin: 10px 30px;
+}
+.u2{
+  width: 600px;
+  margin: 10px 30px;
+}
+.todo{
+  width: 400px;
+  margin: 10px 50px;
+}
 button{
   margin-left: 120px;
 }

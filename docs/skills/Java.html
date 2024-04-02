@@ -21,6 +21,123 @@
     <h4>【使用例】</h4>
     <div class="detail">
       ToDo管理サービスを作成した。<br>
+      <img src="../image/todo.png" class="todo"><br>
+      このToDoサービスは、以下のコードから構成されている。<br>
+      <img src="../image/todolist.png" class="u1"><br>
+      例えばサインアップのコードは、少し長いが以下のようになっている。<br>
+      <pre>
+        <code>
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.nio.file.*;
+import java.util.List;
+
+public class SignUp extends JFrame implements ActionListener{
+     private static final long serialVersionUID = 1L;
+     private JTextField n_field, a_field, p_field, c_field;
+     private String mnum, dnum, tnum;
+     JButton okb, backb;
+     
+     public SignUp(String mnum, String dnum, String tnum) {
+          this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+          this.setSize(400, 330);
+
+          this.setLocationRelativeTo(null);
+
+          this.setTitle("Sign Up");
+          this.mnum=mnum;
+          this.dnum=dnum;
+          this.tnum=tnum;
+          Container contentPane = this.getContentPane();
+          contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+          JPanel subPane = new JPanel(); 
+          subPane.setBorder(BorderFactory.createEmptyBorder( 20, 20, 0, 20 ));
+          subPane.setLayout(new GridLayout(9, 1));
+          subPane.setBackground(Color.GREEN);
+         
+          JLabel n_label = new JLabel("Name:");
+          subPane.add(n_label);
+          n_field = new JTextField();
+          subPane.add(n_field);
+          JLabel a_label = new JLabel("Adress:");
+          subPane.add(a_label);
+          a_field = new JTextField();
+          subPane.add(a_field);
+          JLabel p_label = new JLabel("Password:");
+          subPane.add(p_label);
+          p_field = new JTextField();
+          subPane.add(p_field);
+          JLabel c_label = new JLabel("Confirm:");
+          subPane.add(c_label);
+          c_field = new JTextField();
+          subPane.add(c_field);
+          
+          JPanel okPane = new JPanel();
+          okPane.setLayout(new GridLayout(1,3));
+          this.okb = new JButton("OK");
+          this.okb.addActionListener(this);
+          okPane.add(Box.createRigidArea(new Dimension(1, 1)));
+          okPane.add(this.okb);
+          okPane.add(Box.createRigidArea(new Dimension(1, 1)));
+          JPanel backPane = new JPanel();
+          backPane.setLayout(new GridLayout(1,3));
+          this.backb = new JButton("Back to HOME");
+          
+          this.backb.addActionListener(this);
+          backPane.add(Box.createRigidArea(new Dimension(1, 1)));
+          backPane.add(this.backb);
+          backPane.add(Box.createRigidArea(new Dimension(1, 1)));
+          
+          contentPane.add(subPane);
+          
+          contentPane.add(okPane);
+          contentPane.add(Box.createRigidArea(new Dimension(280, 35)));
+          contentPane.add(backPane);
+          contentPane.add(Box.createRigidArea(new Dimension(280, 15)));
+     }
+     
+     @Override
+     public void actionPerformed(ActionEvent ae) {
+    	 if (ae.getSource() == this.okb) {
+    		 try {
+    			 FileWriter file = new FileWriter("personal_info.txt", true);
+    			 PrintWriter pw = new PrintWriter(new BufferedWriter(file));
+    			 Path p = Paths.get("personal_info.txt");
+    			 int cnt = 0;
+    			 if (Files.exists(p)) {
+                     List<String> lines = Files.readAllLines(p);
+                     cnt = lines.size() + 1;
+                 }
+        		 String newInfo = String.format("%05d", cnt)+"|"+n_field.getText()+"|"+a_field.getText()+"|"+p_field.getText()+"|"+"p";    
+        		 pw.print("\n");
+        		 pw.print(newInfo);
+        		 pw.close();
+        		 String newfname = String.format("%05d", cnt)+".txt";
+        		 File newf = new File(newfname);
+        		 newf.createNewFile();
+        		 Remember mainView = new Remember(cnt, mnum, dnum, tnum);
+                 mainView.setVisible(true);
+                 this.setVisible(false);
+        	 }catch(IOException e){
+        		 System.err.println("IOException"+e.toString());
+        	 }
+         } else if(ae.getSource() == this.backb) {
+        	 Home mainView = new Home(mnum, dnum, tnum);
+             mainView.setVisible(true);
+             this.setVisible(false);
+         } else {
+             System.exit(0);
+         }
+    }
+}
+        </code>
+      </pre>
       <br>
     </div>
   </div>
